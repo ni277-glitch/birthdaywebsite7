@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+</head>
+<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>HBD Saruu....</title>	    
+    <link type="text/css" rel="stylesheet" href="./file/default.css">
+    <script type="text/javascript" src="./file/jquery.min.js"></script>
+    <script type="text/javascript" src="./file/jscex.min.js"></script>
+    <script type="text/javascript" src="./file/jscex-parser.js"></script>
+    <script type="text/javascript" src="./file/jscex-jit.js"></script>
+    <script type="text/javascript" src="./file/jscex-builderbase.min.js"></script>
+    <script type="text/javascript" src="./file/jscex-async.min.js"></script>
+    <script type="text/javascript" src="./file/jscex-async-powerpack.min.js"></script>
+    <script type="text/javascript" src="./file/functions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./file/love.js" charset="utf-8"></script>
+    <style>
+    html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000 !important;
+    overflow: hidden;
+}
+        /* Dark Overlay Background */
+#warning-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9); /* Semi-transparent black */
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The Pop-up Box */
+.warning-box {
+    background: #1a1a1a;
+    border: 2px solid #ff4d6d;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* The OK Button */
+.ok-button {
+    margin-top: 20px;
+    background: #ff4d6d;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+        body {
+    background-size: cover !important;
+    background-position: center !important;
+}
+    /* Fix for Mobile Background and Orientation */
+@media only screen and (max-width: 600px) {
+    body {
+        background-size: cover !important; /* Forces background to fit the screen */
+        background-attachment: scroll !important;
+        overflow: hidden; /* Prevents weird scrolling */
+    }
+
+    #main {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 auto !important;
+    }
+
+    /* Shrink the tree and text for mobile */
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    #code {
+        width: 90% !important;
+        margin-top: 20px !important;
+        padding-left: 20px !important;
+        font-size: 14px !important; /* Slightly smaller text for phone */
+    }
+
+    /* Reposition the photo frame for mobile */
+    #photo-box {
+        top: 30% !important;
+        left: 50% !important;
+    }
+}/* This targets the quote text (Happy Birthday, etc.) */
+        #code {
+            font-family: "Courier New", Courier, monospace !important; /* The Coding Font */
+            color: #deff4d !important; /* Change this to your preferred color */
+            font-size: 15px !important; 
+            font-weight: bold !important;
+            text-shadow: 0 0 15px rgb(255, 255, 255);
+            line-height: 1.8 !important; /* Adds space between lines */
+        }
+
+        /* This targets the specific lines inside the quote */
+        .say {
+            font-family: "Courier New", Courier, monospace !important;
+        }
+        /* Cute & Lovable Countdown Style */
+        #clock-box {
+            position: fixed;
+            display: none;
+            width: 100%;
+            text-align: center;
+            z-index: 9999;
+            bottom: 0px;
+            left: 0px;
+            color: #4eff22;
+            font-family: 'Courier New', courier, monospace;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgb(255, 255, 255);
+        }
+        .digit {
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 25px rgb(255, 255, 255);
+            color: #ee66e2;
+        }
+        /* Balloon Styles */
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50%;
+            z-index: 999;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: floatUp 6s linear forwards;
+        }
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: rgba(0,0,0,0.2);
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+        }
+    /* Romantic Photo Frame */
+        #photo-box {
+            display: none; /* Hidden at first */
+            position: absolute;
+            top: 300px;
+            left: 100px;
+            transform: translateX(-50%, -50%);
+            z-index: 10;
+            pointer-events: none;
+        }
+        #photo-box img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%; /* Makes it a circle */
+            border: 4px solid #edff4d;
+            box-shadow: 0 0 15px rgb(255, 255, 255);
+            object-fit: cover; /* Ensures the face isn't stretched */
+            animation: slowRotate 10s linear infinite;
+        }
+            @keyframes slowRotate {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+        }
+/* Blackout Screen for Orientation Fix */
+#landscape-warning {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh;
+    background: #000000; /* All screen dark */
+    color: #ff4d6d; /* Romantic red text */
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    font-family: "Courier New", Courier, monospace; /* Matching your coding font */
+}
+
+/* Only show the dark screen if she is holding the phone sideways */
+@media screen and (orientation: landscape) {
+    #landscape-warning { display: flex; }
+}
+
+/* Hide the warning when she rotates it correctly */
+@media screen and (orientation: portrait) {
+    #landscape-warning { display: none; }
+}
+
+.warning-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+}</style>
+        <div id="clock-box" style="display: none;">
+            we r lucky since 26/12/2002 : <span id="clock"></span>
+        </div>
+    <script>
+        function playAudio() {
+            var audio = document.getElementById("myAudio");
+            audio.play();
+        }
+        
+function createBalloons() {
+            const colors = ['#ff4d6d', '#ffb3c1', '#ff758f', '#c9184a', '#ff85a1'];
+            
+            // This function creates one balloon
+            const spawn = () => {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = Math.random() * 95 + 'vw'; // Random horizontal position
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Duration: how long it takes to reach the top (4 to 7 seconds)
+                balloon.style.animationDuration = (Math.random() * 3 + 4) + 's'; 
+                
+                document.body.appendChild(balloon);
+                
+                // Remove balloon after it leaves the screen to keep the site fast
+                setTimeout(() => balloon.remove(), 8000);
+            };
+
+            // Spawn a new balloon every 400 milliseconds (0.4 seconds) forever
+            setInterval(spawn, 400); 
+        }
+    </script>
+</head>
+    <body>
+        Er<div id="warning-overlay">
+    <div class="warning-box">
+        <span style="font-size: 40px;">😁</span>
+        <h3 style="color: #ff4d6d;">Happy Birthday</h3>
+        <b>Prefer Portrait Mode & Turn on Desktop Mode<p>For Better Experience</b>
+        <button class="ok-button" onclick="closeWarning()">OK, I'm Ready</button>
+    </div>
+</div>
+    <div id="main">
+        <div id="error">Please use <a href="http://google.com/chrome">Chrome</a> or <a href="http://firefox.com">Firefox</a></div>
+        <audio autoplay="autoplay" id="myAudio">
+            <source src="aud.mp3" type="audio/mp3" />
+        </audio>
+        <div id="wrap">
+            <div id="text"><div id="photo-box"><img src="WhatsApp Image 2025-12-25 at 11.06.01.jpeg" alt="My Love"></div>
+                <div id="code">
+                    <span class="say">Happy Birthday..... 🎈</span><br>
+                    <span class="say">may GOD bless you 🍀</span><br>
+                    <span class="say">give u many happiness 💕</span><br>
+                    <span class="say">and fulfil your dreams ❤️</span><br>
+                    <span class="say">Happy Birthday again.... ❤️</span><br>
+                    <span class="say">hope u have a great day today ❤️</span><br>
+                </div>
+            </div>
+            <canvas id="canvas" width="1100" height="680"></canvas>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var canvas = $('#canvas');
+        $("#clock-box").hide();
+        if (!canvas[0].getContext) {
+            $("#error").show();
+            return false;
+        }
+
+        var width = canvas.width();
+        var height = canvas.height();        
+        canvas.attr("width", width);
+        canvas.attr("height", height);
+
+        var opts = {
+            seed: { x: width / 2 - 20, color: "rgb(190, 26, 37)", scale: 2 },
+            branch: [[535, 680, 570, 250, 500, 200, 30, 100, [
+                    [540, 500, 455, 417, 340, 400, 13, 100, [[450, 435, 434, 430, 394, 395, 2, 40]]],
+                    [550, 445, 600, 356, 680, 345, 12, 100, [[578, 400, 648, 409, 661, 426, 3, 80]]],
+                    [539, 281, 537, 248, 534, 217, 3, 40],
+                    [546, 397, 413, 247, 328, 244, 9, 80, [[427, 286, 383, 253, 371, 205, 2, 40],[498, 345, 435, 315, 395, 330, 4, 60]]],
+                    [546, 357, 608, 252, 678, 221, 6, 100, [[590, 293, 646, 277, 648, 271, 2, 80]]]
+                ]]],
+            bloom: { num: 700, width: 1080, height: 650 },
+            footer: { width: 1200, height: 5, speed: 10 }
+        }
+
+        var tree = new Tree(canvas[0], width, height, opts);
+        var seed = tree.seed;
+        var foot = tree.footer;
+        var hold = 1;
+
+        canvas.click(function(e) {
+            playAudio();
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            if (seed.hover(x, y)) {
+                createBalloons(); // Balloons fly up on click!
+                hold = 0; 
+                canvas.unbind("click");
+                canvas.unbind("mousemove");
+                canvas.removeClass('hand');
+            }
+        }).mousemove(function(e) {
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            canvas.toggleClass('hand', seed.hover(x, y));
+        });
+
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (hold) { $await(Jscex.Async.sleep(10)); }
+            while (seed.canScale()) { seed.scale(0.95); $await(Jscex.Async.sleep(10)); }
+            while (seed.canMove()) { seed.move(0, 2); foot.draw(); $await(Jscex.Async.sleep(10)); }
+        }));
+
+        var growAnimate = eval(Jscex.compile("async", function () {
+            do { tree.grow(); $await(Jscex.Async.sleep(10)); } while (tree.canGrow());
+        }));
+
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do { tree.flower(2); $await(Jscex.Async.sleep(10)); } while (tree.canFlower());
+        }));
+
+        var moveAnimate = eval(Jscex.compile("async", function () {
+            tree.snapshot("p1", 240, 0, 610, 680);
+            while (tree.move("p1", 500, 0)) { foot.draw(); $await(Jscex.Async.sleep(10)); }
+            foot.draw();
+            tree.snapshot("p2", 500, 0, 610, 680);
+            canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
+            $await(Jscex.Async.sleep(300));
+            canvas.css("background", "none");
+        }));
+
+var textAnimate = eval(Jscex.compile("async", function () {
+            // 1. Show Photo & Poem
+            $("#photo-box").fadeIn(3000);
+            $("#code").show().typewriter();
+
+            // 2. Wait 5 seconds for poem to finish
+            $await(Jscex.Async.sleep(25000));
+
+            // 3. Set the Date
+            var together = new Date();
+            together.setFullYear(2002, 11, 26); // Dec 26
+            together.setHours(0);
+            together.setMinutes(0);
+            together.setSeconds(0);
+
+            // 4. Define the calculation logic
+            var updateClock = function() {
+                var current = new Date();
+                var diff = (current.getTime() - together.getTime()) / 1000;
+                var days = Math.floor(diff / (3600 * 24));
+                diff %= (3600 * 24);
+                var hours = Math.floor(diff / 3600);
+                diff %= 3600;
+                var minutes = Math.floor(diff / 60);
+                var seconds = Math.floor(diff % 60);
+
+                var result = "<span class=\"digit\">" + days + "</span> days " + 
+                             "<span class=\"digit\">" + hours + "</span> hrs " + 
+                             "<span class=\"digit\">" + minutes + "</span> min " + 
+                             "<span class=\"digit\">" + seconds + "</span> sec";
+                $("#clock").html(result);
+            };
+
+            // 5. CRITICAL FIX: Run the math immediately! 
+            // This puts the numbers in the box BEFORE we show it.
+            updateClock(); 
+
+            // 6. NOW show the box (The numbers are already there, so no glitch!)
+            $("#clock-box").fadeIn(3000);
+
+            // 7. Keep updating every second
+            setInterval(updateClock, 1000);
+        }));
+	    
+        var runAsync = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(growAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+            textAnimate().start();
+        }));
+
+        runAsync().start();
+    })();
+    </script>
+<script>
+    function closeWarning() {
+        // This hides the black screen when she clicks the button
+        document.getElementById('warning-overlay').style.display = 'none';
+    }
+</script>
+</body>
+</html>
